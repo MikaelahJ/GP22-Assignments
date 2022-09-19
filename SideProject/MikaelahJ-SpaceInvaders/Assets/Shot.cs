@@ -16,7 +16,7 @@ public class Shot : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (rb.position.y > Screen.width)
+        if (rb.position.x > 10 || rb.position.x < -10)
         {
             Destroy(gameObject);
         }

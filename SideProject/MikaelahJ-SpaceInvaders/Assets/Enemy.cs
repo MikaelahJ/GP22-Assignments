@@ -17,7 +17,7 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(pos.x < -1)
+        if (rb.position.x < -10)
         {
             Destroy(gameObject);
         }

@@ -10,7 +10,7 @@ public class EnemySpawner : MonoBehaviour
     float spawnRate = 0.5f;
     Vector2 pos;
 
-    float height = 3;
+    float height = 4;
 
     void Update()
     {
@@ -24,7 +24,7 @@ public class EnemySpawner : MonoBehaviour
     void spawnEnemy()
     {
         pos.y = Random.Range(-height, height);
-        pos.x = 7;
+        pos.x = 10;
         Instantiate(enemyPrefab, pos, Quaternion.identity);
 
     }
