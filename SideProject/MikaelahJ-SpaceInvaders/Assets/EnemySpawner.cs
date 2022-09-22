@@ -5,27 +5,88 @@ using UnityEngine;
 public class EnemySpawner : MonoBehaviour
 {
     public GameObject enemyPrefab;
+    List<GameObject> enemies = new List<GameObject>();
 
-    float timer;
-    float spawnRate = 0.5f;
+
     Vector2 pos;
 
     float height = 4;
 
+    [SerializeField] GameObject[] wave1;
+    [SerializeField] GameObject[] wave2;
+    [SerializeField] GameObject[] wave3;
+
+    int currentWave = 1;
+    bool ongoingWave = false;
+    float betweenSpawns = 2f;
+
     void Update()
     {
-        if (timer > spawnRate)
+        enemies.RemoveAll(s => s == null);
+
+        if (enemies.Count == 0)
         {
-            spawnEnemy();
-            timer = 0;
+            ongoingWave = false;
         }
-        timer += Time.deltaTime;
+
+        if (ongoingWave == false)
+        {
+            StartCoroutine(spawnWave());
+
+        }
+    }
+
+    IEnumerator spawnWave()
+    {
+        ongoingWave = true;
+        switch (currentWave)
+        {
+
+            case 1:
+                currentWave++;
+                foreach (GameObject enemy in wave1)
+                {
+                    spawnEnemy();
+                    yield return new WaitForSeconds(1f);
+                }
+                break;
+
+            case 2:
+                currentWave++;
+                betweenSpawns *= 0.5f;
+
+                foreach (GameObject enemy in wave2)
+                {
+                    spawnEnemy();
+                    yield return new WaitForSeconds(betweenSpawns);
+
+                }
+                break;
+
+            case 3:
+                currentWave++;
+                betweenSpawns *= 0.5f;
+
+
+                foreach (GameObject enemy in wave3)
+                {
+                    spawnEnemy();
+                    yield return new WaitForSeconds(1f);
+
+                }
+                break;
+
+        }
+
+
     }
     void spawnEnemy()
     {
         pos.y = Random.Range(-height, height);
         pos.x = 10;
-        Instantiate(enemyPrefab, pos, Quaternion.identity);
+
+        GameObject enemy = Instantiate(enemyPrefab, pos, Quaternion.identity);
+        enemies.Add(enemy);
 
     }
 }
