@@ -12,7 +12,11 @@ public class Player : ProcessingLite.GP21
     float a = 5;
     Vector2 dir;
     Vector2 zero;
-
+    private void Start()
+    {
+        pos.x = Width / 2;
+        pos.y = Height / 2;
+    }
     void Update()
     {
         Background(0);
@@ -25,11 +29,14 @@ public class Player : ProcessingLite.GP21
 
         dir.x += v * Input.GetAxis("Horizontal") * Time.deltaTime;
         dir.y += v * Input.GetAxis("Vertical") * Time.deltaTime;
-
+        
         pos += dir * Time.deltaTime;
         pos = Vector2.Lerp(pos, zero, Time.deltaTime);
 
-
+        //if(pos.x > Width)
+        //{
+        //    pos.x = 0;
+        //}
 
         Stroke(255);
         Circle(pos.x, pos.y, diameter);
