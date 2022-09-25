@@ -7,7 +7,7 @@ public class Ball : ProcessingLite.GP21
     public Vector2 position;
     Vector2 velocity;
 
-    float size;
+    public float size;
     int r;
     int g;
     int b;
@@ -29,13 +29,14 @@ public class Ball : ProcessingLite.GP21
 
     public void Draw()
     {
-        Stroke(r,g,b);
+        Stroke(r, g, b);
+        Fill(0);
         Circle(position.x, position.y, size);
     }
 
     public void UpdatePos()
     {
-        
+
 
         position += velocity * Time.deltaTime;
 

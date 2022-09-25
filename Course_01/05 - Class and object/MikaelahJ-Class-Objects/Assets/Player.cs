@@ -41,6 +41,7 @@ public class Player : ProcessingLite.GP21
 
         position += dir * Time.deltaTime;
 
+
         if ((position.x + (size / 2)) >= Width || (position.x - (size / 2)) <= 0)
         {
             dir.x *= -1;
@@ -50,6 +51,23 @@ public class Player : ProcessingLite.GP21
             dir.y *= -1;
         }
     }
+    public bool Collision(Player player, Ball ball2)
+    {
+        float maxdistance = (player.size / 2) + (ball2.size / 2);
 
+        if (Mathf.Abs(player.position.x - ball2.position.x) > maxdistance || Mathf.Abs(player.position.y - ball2.position.y) > maxdistance)
+        {
+            return false;
+        }
+        else if (Vector2.Distance(new Vector2(player.position.x, player.position.y), new Vector2(ball2.position.x, ball2.position.y)) > maxdistance)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+
+    }
 }
 
