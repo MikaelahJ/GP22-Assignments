@@ -5,10 +5,10 @@ using UnityEngine;
 public class Zombie : ProcessingLite.GP21
 {
     public Vector2 position;
-    Vector2 velocity;
+    Vector2 dir;
 
     public float size;
-   
+    float speed = 0.01f;
     int r;
     int g;
     int b;
@@ -22,9 +22,9 @@ public class Zombie : ProcessingLite.GP21
         g = _g;
         b = _b;
 
-        velocity = new Vector2();
-        velocity.x = Random.Range(0, 11) - 5;
-        velocity.y = Random.Range(0, 11) - 5;
+        dir = new Vector2();
+        dir.x = Random.Range(0, 11) - 5;
+        dir.y = Random.Range(0, 11) - 5;
 
     }
 
@@ -39,15 +39,15 @@ public class Zombie : ProcessingLite.GP21
     {
 
 
-        position += velocity * Time.deltaTime;
+        position += dir * Time.deltaTime * speed;
 
         if ((position.x + (size / 2)) >= Width || (position.x - (size / 2)) <= 0)
         {
-            velocity.x *= -1;
+            dir.x *= -1;
         }
         if ((position.y + (size / 2)) >= Height || (position.y - (size / 2)) <= 0)
         {
-            velocity.y *= -1;
+            dir.y *= -1;
         }
     }
 

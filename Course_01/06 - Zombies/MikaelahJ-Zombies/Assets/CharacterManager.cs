@@ -41,7 +41,8 @@ public class CharacterManager : ProcessingLite.GP21
                     {
                         zombie[j] = new Zombie(human[i].position.x, human[i].position.y, 0, 255, 0, 0.2f);
                         j++;
-                        human[i] = new Human(0,0,0);
+                        human[i].Remove();
+                       
                     }
                 }
             }

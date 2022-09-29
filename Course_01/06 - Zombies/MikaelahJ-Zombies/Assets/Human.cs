@@ -19,6 +19,7 @@ public class Human : ProcessingLite.GP21
         velocity = new Vector2();
         velocity.x = Random.Range(0, 11) - 5;
         velocity.y = Random.Range(0, 11) - 5;
+
     }
 
     public void Draw()
@@ -41,6 +42,7 @@ public class Human : ProcessingLite.GP21
             velocity.y *= -1;
         }
     }
+
     public bool Collision(Human human, Zombie zombie)
     {
         float maxdistance = (human.size / 2) + (zombie.size / 2);
@@ -57,7 +59,10 @@ public class Human : ProcessingLite.GP21
         {
             return true;
         }
-
+    }
+    public void Remove()
+    {
+        Destroy(this);
     }
 }
 
