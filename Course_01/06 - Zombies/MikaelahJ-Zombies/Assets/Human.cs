@@ -8,7 +8,6 @@ public class Human : ProcessingLite.GP21
     Vector2 velocity;
 
     float size;
-    int colour;
 
     public Human(float x, float y, float _size)
     {
@@ -60,9 +59,9 @@ public class Human : ProcessingLite.GP21
             return true;
         }
     }
-    public void Remove()
-    {
-        Destroy(this);
-    }
+    //public void Remove()
+    //{
+    //    Destroy(this);
+    //}
 }
 

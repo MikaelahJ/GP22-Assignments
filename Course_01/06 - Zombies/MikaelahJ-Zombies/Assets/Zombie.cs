@@ -27,7 +27,6 @@ public class Zombie : ProcessingLite.GP21
         dir.y = Random.Range(0, 11) - 5;
 
     }
-
     public void Draw()
     {
         Stroke(r, g, b);
@@ -37,9 +36,7 @@ public class Zombie : ProcessingLite.GP21
 
     public void UpdatePos()
     {
-
-
-        position += dir * Time.deltaTime * speed;
+        position += dir * 0.01f * speed;
 
         if ((position.x + (size / 2)) >= Width || (position.x - (size / 2)) <= 0)
         {

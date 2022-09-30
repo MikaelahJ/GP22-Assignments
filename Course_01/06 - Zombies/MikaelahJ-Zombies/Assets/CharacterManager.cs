@@ -4,22 +4,30 @@ using UnityEngine;
 
 public class CharacterManager : ProcessingLite.GP21
 {
-    Zombie[] zombie = new Zombie[100];
-    Human[] human = new Human[99];
+    //Zombie[] zombie;
+    //Human[] human = new Human[99];
+    List<Human> humans;
+    List<Zombie> zombies;
 
-    bool running = true;
-    int j = 0;
-    
+
+    bool running;
+    int z;
+
     void Start()
     {
-        for (int i = 0; i < human.Length; i++)
+        humans = new List<Human>(99);
+        zombies = new List<Zombie>(100);
+
+
+        running = true;
+        z = 0;
+
+        for (int i = 0; i < 99; i++)
         {
-            human[i] = new Human(Random.Range(1, Width - 1), Random.Range(1, Height - 1), 0.2f);
+            humans.Add(new Human(Random.Range(1, Width - 1), Random.Range(1, Height - 1), 0.2f));
         }
-
-        zombie[j] = new Zombie(Random.Range(1, Width - 1), Random.Range(1, Height - 1), 0, 255, 0, 0.2f);
-        j++;
-
+        zombies.Add(new Zombie(Random.Range(1, Width - 1), Random.Range(1, Height - 1), 0, 255, 0, 0.2f));
+        z++;
     }
 
     void Update()
@@ -27,41 +35,46 @@ public class CharacterManager : ProcessingLite.GP21
         if (running)
         {
             Background(0);
+            Debug.Log(humans.Count + " " + zombies.Count);
 
-            for (int i = 0; i < human.Length; i++)
+
+            for (int i = 0; i < humans.Count; i++)
             {
-                human[i].Draw();
-                human[i].UpdatePos();
-                for (int k = 0; k < j; k++)
-                {
-                    zombie[k].Draw();
-                    zombie[k].UpdatePos();
+                humans[i].Draw();
+                humans[i].UpdatePos();
 
-                    if (human[i].Collision(human[i], zombie[k]))
+                for (int k = 0; k < z; k++)
+                {
+                    zombies[k].Draw();
+                    zombies[k].UpdatePos();
+
+                    if (humans[i].Collision(humans[i], zombies[k]))
                     {
-                        zombie[j] = new Zombie(human[i].position.x, human[i].position.y, 0, 255, 0, 0.2f);
-                        j++;
-                        human[i].Remove();
-                       
+                        humans.RemoveAt(i);
+                        zombies.Add(new Zombie(zombies[k].position.x, zombies[k].position.y, 0, 255, 0, 0.2f));
+
+                        z = zombies.Count;
+
+                        if (z == 100)
+                        {
+                            Background(0);
+                            GameOver();
+                        }
                     }
                 }
+            }
+            //Force gameOver
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                Background(0);
+                GameOver();
             }
         }
         else
         {
             if (Input.GetKeyDown(KeyCode.R))
             {
-                j = 0;
-                zombie = new Zombie[100];
-                for (int k = 0; k < human.Length; k++)
-                {
-                    human[k] = new Human(Random.Range(1, Width - 1), Random.Range(1, Height - 1), 0.1f);
-                }
-
-                zombie[j] = new Zombie(Random.Range(1, Width - 1), Random.Range(1, Height - 1), 0, 255, 0, 0.1f);
-
-                running = true;
-
+                Start();
             }
         }
     }
@@ -71,6 +84,7 @@ public class CharacterManager : ProcessingLite.GP21
         running = false;
         Stroke(255, 0, 0);
         Fill(255, 0, 0);
+        TextSize(20);
         Text("Game Over", Width / 2, (Height / 2) - 1);
         Text("R to Restart", Width / 2, (Height / 2) - 2);
     }
