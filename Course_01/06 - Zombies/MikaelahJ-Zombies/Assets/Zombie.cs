@@ -38,13 +38,21 @@ public class Zombie : ProcessingLite.GP21
     {
         position += dir * 0.01f * speed;
 
-        if ((position.x + (size / 2)) >= Width || (position.x - (size / 2)) <= 0)
+        if ((position.x + (size / 2)) >= Width)
         {
-            dir.x *= -1;
+            position.x += 0;
         }
-        if ((position.y + (size / 2)) >= Height || (position.y - (size / 2)) <= 0)
+        if ((position.x - (size / 2)) <= 0)
         {
-            dir.y *= -1;
+            position.x += Width;
+        }
+        if ((position.y + (size / 2)) >= Height)
+        {
+            position.y += 0;
+        }
+        if((position.y - (size / 2)) <= 0)
+        {
+            position.y += Height;
         }
     }
 

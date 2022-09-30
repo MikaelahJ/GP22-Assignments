@@ -32,13 +32,21 @@ public class Human : ProcessingLite.GP21
     {
         position += velocity * Time.deltaTime;
 
-        if ((position.x + (size / 2)) >= Width || (position.x - (size / 2)) <= 0)
+        if ((position.x) >= Width)
         {
-            velocity.x *= -1;
+            position.x += 0;
         }
-        if ((position.y + (size / 2)) >= Height || (position.y - (size / 2)) <= 0)
+        if ((position.x) <= 0)
         {
-            velocity.y *= -1;
+            position.x += Width;
+        }
+        if ((position.y) >= Height)
+        {
+            position.y += 0;
+        }
+        if ((position.y) <= 0)
+        {
+            position.y += Height;
         }
     }
 

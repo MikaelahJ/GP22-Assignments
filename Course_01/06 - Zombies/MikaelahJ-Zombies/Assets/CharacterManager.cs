@@ -12,9 +12,12 @@ public class CharacterManager : ProcessingLite.GP21
 
     bool running;
     int z;
+    float timer;
 
     void Start()
     {
+        timer = 0;
+
         humans = new List<Human>(99);
         zombies = new List<Zombie>(100);
 
@@ -34,6 +37,7 @@ public class CharacterManager : ProcessingLite.GP21
     {
         if (running)
         {
+            timer += Time.deltaTime;
             Background(0);
             Debug.Log(humans.Count + " " + zombies.Count);
 
@@ -85,7 +89,7 @@ public class CharacterManager : ProcessingLite.GP21
         Stroke(255, 0, 0);
         Fill(255, 0, 0);
         TextSize(20);
-        Text("Game Over", Width / 2, (Height / 2) - 1);
+        Text("Game Over in: " + timer.ToString("0.0") + " seconds", Width / 2, (Height / 2) - 1);
         Text("R to Restart", Width / 2, (Height / 2) - 2);
     }
 }
