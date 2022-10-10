@@ -9,7 +9,6 @@ public class EnemySpawner : MonoBehaviour
 
     Vector2 pos;
     float height, width;
-    float speed = 2f;
 
     float timer;
     float spawnRate = 0.5f;

@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 public class Bullet : MonoBehaviour
 {
     Rigidbody2D rb;
-    float bulletspeed = 5;
+    float bulletspeed = 10;
     public Counter counter;
     void Start()
     {
@@ -22,7 +22,6 @@ public class Bullet : MonoBehaviour
             counter.UpdatePoints();
             Destroy(other.gameObject);
             Destroy(this.gameObject);
-
         }
     }
 }

@@ -13,7 +13,6 @@ public class Enemy : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         target = GameObject.Find("Player").transform;
-        Debug.Log(target);
     }
 
     void Update()
