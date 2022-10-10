@@ -9,15 +9,16 @@ class MikJen : IRandomWalker
     int areaHeight;
     Vector2 currentPos;
     Vector2 nextPos;
+    Vector2[] possibleDir = new Vector2[] { new Vector2(-1, 0), new Vector2(0, -1), new Vector2(1, 0), new Vector2(0, 1) };
     List<Vector2> pastPos = new List<Vector2>();
-    Vector2[] possibleDir = new Vector2[] { new Vector2(-1, 0), new Vector2(1, 0), new Vector2(0, -1), new Vector2(0, 1) };
     int nextDir;
-    bool inArea = true;
-    bool finding;
+    int maxDistance = 5;
+    int distance;
+    int i = 0;
 
     public string GetName()
     {
-        return "Kalle"; //When asked, tell them our walkers name
+        return "Mikk"; //When asked, tell them our walkers name
     }
 
     public Vector2 GetStartPosition(int playAreaWidth, int playAreaHeight)
@@ -25,10 +26,11 @@ class MikJen : IRandomWalker
         areaWidth = playAreaWidth;
         areaHeight = playAreaHeight;
         //Select a starting position or use a random one.
-        float x = Random.Range(0, playAreaWidth);
-        float y = Random.Range(0, playAreaHeight);
+        float x = playAreaWidth - 6;
+        float y = playAreaHeight - 5;
 
         //a PVector holds floats but make sure its whole numbers that are returned!
+        currentPos = new Vector2(x, y);
         return new Vector2(x, y);
     }
 
@@ -36,80 +38,108 @@ class MikJen : IRandomWalker
     {
         //add your own walk behavior for your walker here.
         //Make sure to only use the outputs listed below.
-        finding = true;
-        int i = 0;
-        while (finding == true)
+
+        nextPos = currentPos + possibleDir[nextDir];
+        //Debug.Log("current" + currentPos);
+        //Debug.Log("next" + nextPos);
+        if (i == 0 || i == 2)
         {
-            i++;
+            //distance between nextPos and left and right wall
+            float distance1 = Vector2.Distance(nextPos, new Vector2(0, nextPos.y));
+            float distance2 = Vector2.Distance(nextPos, new Vector2(areaWidth, nextPos.y));
 
-            nextDir = Random.Range(0, 4);
-
-            nextPos = currentPos + possibleDir[nextDir];
-            Debug.Log("nextDir: " + nextDir);
-
-            if (nextPos.x < 0 || nextPos.x > areaWidth || nextPos.y < 0 || nextPos.y > areaHeight)
+            if (distance1 < maxDistance || distance2 < maxDistance)
             {
-                inArea = false;
-                Debug.Log("out");
+                i++;
+                if (i == 4)
+                {
+                    i = 0;
+                }
             }
             else
             {
-                inArea = true;
-                Debug.Log("in");
-            }
+                for (int k = 0; k < pastPos.Count; k++)
+                {
+                    //distance between nextPos and pastPos
+                    if (i == 0)
+                    {
+                        if (Vector2.Distance(new Vector2(nextPos.x - 5, nextPos.y), new Vector2(pastPos[k].x, nextPos.y)) < maxDistance)
+                        {
+                            i++;
+                            if (i == 4)
+                            {
+                                i = 0;
+                            }
+                        }
+                    }
+                    else if (i == 2)
+                    {
+                        if (Vector2.Distance(new Vector2(nextPos.x + 5, nextPos.y), new Vector2(pastPos[k].x, nextPos.y)) < maxDistance)
+                        {
+                            Debug.Log("past " + pastPos[k].x);
+                            Debug.Log("next " + nextPos.x);
 
-            if (!pastPos.Contains(nextPos) && inArea == true)
-            {
-                Debug.Log("moving");
-                currentPos = nextPos;
-                pastPos.Add(currentPos);
-                finding = false;
+                            i++;
+                            if (i == 4)
+                            {
+                                i = 0;
+                            }
+                        }
+                    }
+                }
             }
-            if (i >= 4)
-            {
+        }
+        else if (i == 1 || i == 3)
+        {
+            //distance between nextPos and floor and roof
+            float distance1 = Vector2.Distance(nextPos, new Vector2(nextPos.x, 0));
+            float distance2 = Vector2.Distance(nextPos, new Vector2(nextPos.x, areaHeight));
 
+            if (distance1 < maxDistance || distance2 < maxDistance)
+            {
+                i++;
+                if (i == 4)
+                {
+                    i = 0;
+                }
+            }
+            else
+            {
+                for (int k = 0; k < pastPos.Count; k++)
+                {
+                    //distance between nextPos and pastPos
+                    if (i == 1)
+                    {
+                        if (Vector2.Distance(new Vector2(nextPos.x, nextPos.y - 5), new Vector2(nextPos.x, pastPos[k].y)) < maxDistance)
+                        {
+                            i++;
+                            if (i == 4)
+                            {
+                                i = 0;
+                            }
+                        }
+                    }
+                    else if (i == 3)
+                    {
+                        if (Vector2.Distance(new Vector2(nextPos.x, nextPos.y + 5), new Vector2(nextPos.x, pastPos[k].y)) < maxDistance)
+                        {
+                            i++;
+                            if (i == 4)
+                            {
+                                i = 0;
+                            }
+                        }
+                    }
+                }
             }
         }
 
+
+
+        nextDir = i;
+        currentPos = nextPos;
+        pastPos.Add(nextPos);
         return possibleDir[nextDir];
-
-
-
-
-
-
-
-
-
-
-        //for (int i = 0; i < possibleDir.Length; i++)
-        //{
-        //    nextDir = Random.Range(0, 4);
-
-        //    nextPos = currentPos + possibleDir[nextDir];
-
-
-
-
-
-        //    if (nextPos.x < 0 || nextPos.x > areaWidth || nextPos.y < 0 || nextPos.y > areaHeight)
-        //    {
-
-        //        inArea = false;
-        //    }
-        //    else
-        //    {
-        //        inArea = true;
-        //    }
-
-        //    if (!pastPos.Contains(nextPos) && inArea)
-        //    {
-        //        currentPos = nextPos;
-        //        pastPos.Add(currentPos);
-        //        break;
-        //    }
-        //}
-        //return possibleDir[nextDir];
     }
 }
 
