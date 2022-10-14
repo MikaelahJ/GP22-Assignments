@@ -13,7 +13,6 @@ public class BGScroller : MonoBehaviour
         mat = GetComponent<Renderer>().material;
     }
 
-    // Update is called once per frame
     void Update()
     {
         offset += (Time.deltaTime * scrollSpeed) / 10f;

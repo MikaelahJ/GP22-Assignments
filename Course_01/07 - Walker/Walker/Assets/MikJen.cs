@@ -10,10 +10,11 @@ class MikJen : IRandomWalker
     Vector2 currentPos;
     Vector2 nextPos;
     Vector2[] possibleDir = new Vector2[] { new Vector2(-1, 0), new Vector2(0, -1), new Vector2(1, 0), new Vector2(0, 1) };
-    List<Vector2> pastPos = new List<Vector2>();
+    List<Vector2> pastPos1 = new List<Vector2>();
+    Vector2[] pastPos = new Vector2[] { new Vector2(0, 0), new Vector2(0, 0), new Vector2(0, 0), new Vector2(0, 0) };
     int nextDir;
     int maxDistance = 5;
-    int distance;
+    int maxDistanceInner = 2;
     int i = 0;
 
     public string GetName()
@@ -48,46 +49,64 @@ class MikJen : IRandomWalker
             float distance1 = Vector2.Distance(nextPos, new Vector2(0, nextPos.y));
             float distance2 = Vector2.Distance(nextPos, new Vector2(areaWidth, nextPos.y));
 
+            float distanceInner1 = Vector2.Distance(nextPos, new Vector2(pastPos[0].x, nextPos.y));
+            float distanceInner2 = Vector2.Distance(nextPos, new Vector2(pastPos[2].x, nextPos.y));
+
             if (distance1 < maxDistance || distance2 < maxDistance)
             {
+                pastPos[i] = nextPos;
                 i++;
+
+
+                Debug.Log("outer 1");
+
                 if (i == 4)
                 {
                     i = 0;
                 }
             }
-            else
+            else if (distanceInner1 < maxDistanceInner || distanceInner2 < maxDistanceInner)
             {
-                for (int k = 0; k < pastPos.Count; k++)
+                pastPos[i] = nextPos;
+                i++;
+                Debug.Log("Inner 1");
+                if (i == 4)
                 {
-                    //distance between nextPos and pastPos
-                    if (i == 0)
-                    {
-                        if (Vector2.Distance(new Vector2(nextPos.x - 5, nextPos.y), new Vector2(pastPos[k].x, nextPos.y)) < maxDistance)
-                        {
-                            i++;
-                            if (i == 4)
-                            {
-                                i = 0;
-                            }
-                        }
-                    }
-                    else if (i == 2)
-                    {
-                        if (Vector2.Distance(new Vector2(nextPos.x + 5, nextPos.y), new Vector2(pastPos[k].x, nextPos.y)) < maxDistance)
-                        {
-                            Debug.Log("past " + pastPos[k].x);
-                            Debug.Log("next " + nextPos.x);
-
-                            i++;
-                            if (i == 4)
-                            {
-                                i = 0;
-                            }
-                        }
-                    }
+                    i = 0;
                 }
             }
+            //    else
+            //    {
+            //        for (int k = 0; k < pastPos.Count; k++)
+            //        {
+            //            //distance between nextPos and pastPos
+            //            if (i == 0)
+            //            {
+            //                if (Vector2.Distance(new Vector2(nextPos.x - 5, nextPos.y), new Vector2(pastPos[k].x, nextPos.y)) < maxDistance)
+            //                {
+            //                    i++;
+            //                    if (i == 4)
+            //                    {
+            //                        i = 0;
+            //                    }
+            //                }
+            //            }
+            //            else if (i == 2)
+            //            {
+            //                if (Vector2.Distance(new Vector2(nextPos.x + 5, nextPos.y), new Vector2(pastPos[k].x, nextPos.y)) < maxDistance)
+            //                {
+            //                    Debug.Log("past " + pastPos[k].x);
+            //                    Debug.Log("next " + nextPos.x);
+
+            //                    i++;
+            //                    if (i == 4)
+            //                    {
+            //                        i = 0;
+            //                    }
+            //                }
+            //            }
+            //        }
+            //    }
         }
         else if (i == 1 || i == 3)
         {
@@ -95,50 +114,67 @@ class MikJen : IRandomWalker
             float distance1 = Vector2.Distance(nextPos, new Vector2(nextPos.x, 0));
             float distance2 = Vector2.Distance(nextPos, new Vector2(nextPos.x, areaHeight));
 
+            float distanceInner1 = Vector2.Distance(nextPos, new Vector2(nextPos.x, pastPos[1].y));
+            float distanceInner2 = Vector2.Distance(nextPos, new Vector2(nextPos.x, pastPos[3].y));
+
             if (distance1 < maxDistance || distance2 < maxDistance)
             {
+                pastPos[i] = nextPos;
                 i++;
+                Debug.Log("outer 2");
+
                 if (i == 4)
                 {
                     i = 0;
                 }
             }
-            else
+            else if (distanceInner1 < maxDistanceInner || distanceInner2 < maxDistanceInner)
             {
-                for (int k = 0; k < pastPos.Count; k++)
+                pastPos[i] = nextPos;
+                i++;
+                Debug.Log("Inner 2");
+
+                if (i == 4)
                 {
-                    //distance between nextPos and pastPos
-                    if (i == 1)
-                    {
-                        if (Vector2.Distance(new Vector2(nextPos.x, nextPos.y - 5), new Vector2(nextPos.x, pastPos[k].y)) < maxDistance)
-                        {
-                            i++;
-                            if (i == 4)
-                            {
-                                i = 0;
-                            }
-                        }
-                    }
-                    else if (i == 3)
-                    {
-                        if (Vector2.Distance(new Vector2(nextPos.x, nextPos.y + 5), new Vector2(nextPos.x, pastPos[k].y)) < maxDistance)
-                        {
-                            i++;
-                            if (i == 4)
-                            {
-                                i = 0;
-                            }
-                        }
-                    }
+                    i = 0;
                 }
             }
+            //else
+            //{
+            //    for (int k = 0; k < pastPos.Count; k++)
+            //    {
+            //        //distance between nextPos and pastPos
+            //        if (i == 1)
+            //        {
+            //            if (Vector2.Distance(new Vector2(nextPos.x, nextPos.y - 5), new Vector2(nextPos.x, pastPos[k].y)) < maxDistance)
+            //            {
+            //                i++;
+            //                if (i == 4)
+            //                {
+            //                    i = 0;
+            //                }
+            //            }
+            //        }
+            //        else if (i == 3)
+            //        {
+            //            if (Vector2.Distance(new Vector2(nextPos.x, nextPos.y + 5), new Vector2(nextPos.x, pastPos[k].y)) < maxDistance)
+            //            {
+            //                i++;
+            //                if (i == 4)
+            //                {
+            //                    i = 0;
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
         }
 
 
-
+        Debug.Log("i: " + i);
         nextDir = i;
         currentPos = nextPos;
-        pastPos.Add(nextPos);
+        // pastPos.Add(nextPos);
         return possibleDir[nextDir];
     }
 }
