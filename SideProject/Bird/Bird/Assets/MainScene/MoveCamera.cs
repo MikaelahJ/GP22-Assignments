@@ -14,7 +14,8 @@ public class MoveCamera : MonoBehaviour
     private float camX, camY;
     private float xMin, yMin, xMax, yMax;
 
-
+    private Vector3 smoothPos;
+    public float smoothSpeed = 0.5f;
 
     private void Start()
     {
@@ -31,6 +32,7 @@ public class MoveCamera : MonoBehaviour
     {
         camY = Mathf.Clamp(followTransform.position.y, yMin + camSize, yMax - camSize);
         camX = Mathf.Clamp(followTransform.position.x, xMin + camRatio, xMax - camRatio);
-        this.transform.position = new Vector3(camX, camY, this.transform.position.z);
+        smoothPos = Vector3.Lerp(this.transform.position, new Vector3(camX, camY, this.transform.position.z), smoothSpeed);
+        this.transform.position = smoothPos;
     }
 }

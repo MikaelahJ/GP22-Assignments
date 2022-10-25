@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 class MikJen : IRandomWalker
 {
@@ -10,8 +11,7 @@ class MikJen : IRandomWalker
     Vector2 currentPos;
     Vector2 nextPos;
     Vector2[] possibleDir = new Vector2[] { new Vector2(-1, 0), new Vector2(0, -1), new Vector2(1, 0), new Vector2(0, 1) };
-    List<Vector2> pastPos1 = new List<Vector2>();
-    Vector2[] pastPos = new Vector2[] { new Vector2(0, 0), new Vector2(0, 0), new Vector2(0, 0), new Vector2(0, 0) };
+    Vector2[] pastPos = new Vector2[4];
     int nextDir;
     int maxDistance = 5;
     int maxDistanceInner = 2;
@@ -19,7 +19,7 @@ class MikJen : IRandomWalker
 
     public string GetName()
     {
-        return "Mikk"; //When asked, tell them our walkers name
+        return "Mikaelah"; //When asked, tell them our walkers name
     }
 
     public Vector2 GetStartPosition(int playAreaWidth, int playAreaHeight)
@@ -27,8 +27,8 @@ class MikJen : IRandomWalker
         areaWidth = playAreaWidth;
         areaHeight = playAreaHeight;
         //Select a starting position or use a random one.
-        float x = playAreaWidth - 6;
-        float y = playAreaHeight - 5;
+        float x = playAreaWidth - 4;
+        float y = playAreaHeight - 4;
 
         //a PVector holds floats but make sure its whole numbers that are returned!
         currentPos = new Vector2(x, y);
@@ -39,10 +39,17 @@ class MikJen : IRandomWalker
     {
         //add your own walk behavior for your walker here.
         //Make sure to only use the outputs listed below.
+        Move();
 
+        nextDir = i;
+        currentPos = nextPos;
+        return possibleDir[nextDir];
+    }
+
+    private Vector2 Move()
+    {
         nextPos = currentPos + possibleDir[nextDir];
-        //Debug.Log("current" + currentPos);
-        //Debug.Log("next" + nextPos);
+
         if (i == 0 || i == 2)
         {
             //distance between nextPos and left and right wall
@@ -52,61 +59,24 @@ class MikJen : IRandomWalker
             float distanceInner1 = Vector2.Distance(nextPos, new Vector2(pastPos[0].x, nextPos.y));
             float distanceInner2 = Vector2.Distance(nextPos, new Vector2(pastPos[2].x, nextPos.y));
 
-            if (distance1 < maxDistance || distance2 < maxDistance)
+            if (pastPos[0] != Vector2.zero && pastPos[2] != Vector2.zero)
             {
-                pastPos[i] = nextPos;
-                i++;
-
-
-                Debug.Log("outer 1");
-
-                if (i == 4)
+                if (i == 0 && distanceInner1 < maxDistanceInner)
                 {
-                    i = 0;
+                    Rotate();
+                    return nextPos;
+                }
+                else if (i == 2 && distanceInner2 < maxDistanceInner)
+                {
+                    Rotate();
+                    return nextPos;
                 }
             }
-            else if (distanceInner1 < maxDistanceInner || distanceInner2 < maxDistanceInner)
+            else if (distance1 < maxDistance || distance2 < maxDistance)
             {
-                pastPos[i] = nextPos;
-                i++;
-                Debug.Log("Inner 1");
-                if (i == 4)
-                {
-                    i = 0;
-                }
+                Rotate();
+                return nextPos;
             }
-            //    else
-            //    {
-            //        for (int k = 0; k < pastPos.Count; k++)
-            //        {
-            //            //distance between nextPos and pastPos
-            //            if (i == 0)
-            //            {
-            //                if (Vector2.Distance(new Vector2(nextPos.x - 5, nextPos.y), new Vector2(pastPos[k].x, nextPos.y)) < maxDistance)
-            //                {
-            //                    i++;
-            //                    if (i == 4)
-            //                    {
-            //                        i = 0;
-            //                    }
-            //                }
-            //            }
-            //            else if (i == 2)
-            //            {
-            //                if (Vector2.Distance(new Vector2(nextPos.x + 5, nextPos.y), new Vector2(pastPos[k].x, nextPos.y)) < maxDistance)
-            //                {
-            //                    Debug.Log("past " + pastPos[k].x);
-            //                    Debug.Log("next " + nextPos.x);
-
-            //                    i++;
-            //                    if (i == 4)
-            //                    {
-            //                        i = 0;
-            //                    }
-            //                }
-            //            }
-            //        }
-            //    }
         }
         else if (i == 1 || i == 3)
         {
@@ -117,66 +87,39 @@ class MikJen : IRandomWalker
             float distanceInner1 = Vector2.Distance(nextPos, new Vector2(nextPos.x, pastPos[1].y));
             float distanceInner2 = Vector2.Distance(nextPos, new Vector2(nextPos.x, pastPos[3].y));
 
-            if (distance1 < maxDistance || distance2 < maxDistance)
+            if (pastPos[1] != Vector2.zero && pastPos[3] != Vector2.zero)
             {
-                pastPos[i] = nextPos;
-                i++;
-                Debug.Log("outer 2");
-
-                if (i == 4)
+                if (i == 1 && distanceInner1 < maxDistanceInner)
                 {
-                    i = 0;
+                    Rotate();
+                    return nextPos;
+                }
+                else if (i == 3 && distanceInner2 < maxDistanceInner)
+                {
+                    Rotate();
+                    return nextPos;
                 }
             }
-            else if (distanceInner1 < maxDistanceInner || distanceInner2 < maxDistanceInner)
+            else if (distance1 < maxDistance || distance2 < maxDistance)
             {
-                pastPos[i] = nextPos;
-                i++;
-                Debug.Log("Inner 2");
-
-                if (i == 4)
-                {
-                    i = 0;
-                }
+                Rotate();
+                return nextPos;
             }
-            //else
-            //{
-            //    for (int k = 0; k < pastPos.Count; k++)
-            //    {
-            //        //distance between nextPos and pastPos
-            //        if (i == 1)
-            //        {
-            //            if (Vector2.Distance(new Vector2(nextPos.x, nextPos.y - 5), new Vector2(nextPos.x, pastPos[k].y)) < maxDistance)
-            //            {
-            //                i++;
-            //                if (i == 4)
-            //                {
-            //                    i = 0;
-            //                }
-            //            }
-            //        }
-            //        else if (i == 3)
-            //        {
-            //            if (Vector2.Distance(new Vector2(nextPos.x, nextPos.y + 5), new Vector2(nextPos.x, pastPos[k].y)) < maxDistance)
-            //            {
-            //                i++;
-            //                if (i == 4)
-            //                {
-            //                    i = 0;
-            //                }
-            //            }
-            //        }
-            //    }
-            //}
         }
-
-
-        Debug.Log("i: " + i);
-        nextDir = i;
-        currentPos = nextPos;
-        // pastPos.Add(nextPos);
-        return possibleDir[nextDir];
+        return nextPos;
     }
+
+    private void Rotate()
+    {
+        pastPos[i] = nextPos;
+        i++;
+
+        if (i == 4)
+        {
+            i = 0;
+        }
+    }
+
 }
 
 //All valid outputs:
